@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prune-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: prune-test
+  template:
+    metadata:
+      labels:
+        app: prune-test
+    spec:
+      containers: 
+      - name: prune-test
+        image: nginx
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "0.1"
+        ports:
+        - containerPort: 80
