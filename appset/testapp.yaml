@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: test-appset
+spec:
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://github.com/201527514/argocd-test.git
+              revision: main
+              directories:
+                - path: App/nginx
+          - cluster:
+              selector:
+                matchExpressions:
+                  - key: cluster
+                    operator: In
+                    values:
+                      - shr           
+              values:
+                revision: master
+  template:
+    metadata:
+      name: "{{path.basename}}"
+    spec:
+      project: "default"
+        repoURL: https://github.com/201527514/argocd-test.git
+        targetRevision: "{{values.revision}}"
+        path: "{{path}}"
+      destination:
+        server: "{{server}}"
+        namespace: "{{path.basename}}"
